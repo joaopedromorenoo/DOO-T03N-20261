@@ -56,7 +56,7 @@ public class Main {
                 break;
 
             case 4:
-                cadastraCompra();
+                cadastraVenda();
                 mostraMenu();
                 break;
 
@@ -109,16 +109,16 @@ public class Main {
 
         System.out.println("\nQuntidade: ");
         int quant = scanner.nextInt();
-        System.out.println("\nValor unitario: ");
-        double valUni = scanner.nextDouble();
+        System.out.println("\nValor Total: ");
+        double valTot = scanner.nextDouble();
 
-        double desconto = VendaService.calculaDesconto(quant,valUni);
+        double desconto = VendaService.calculaDesconto(quant, valTot);
 
         System.out.printf("\nDesconto = R$%.2f",desconto);
     }
 
     // Cadastra nova compra
-    private static void cadastraCompra() {
+    private static void cadastraVenda() {
         System.out.println("\nQuntidade: ");
         int quant = scanner.nextInt();
         System.out.println("\nValor unitário: ");
@@ -127,10 +127,18 @@ public class Main {
         double desconto = VendaService.calculaDesconto(quant,valUni);
         double valVenda = VendaService.calculaPreco(quant,valUni);
         vendas.add(VendaService.cadastraVenda(quant,valVenda,desconto));
+
+        System.out.println("venda cadastrada com sucesso cadastrada com sucesso!");
     }
 
     // Lista compras realizadas
     private static void listaCompras() {
+
+        if (vendas.isEmpty()) {
+            System.out.println("\nNenhuma compra cadastrada.");
+            return;
+        }
+
         for (Venda m : vendas){
             System.out.println(m);
         }

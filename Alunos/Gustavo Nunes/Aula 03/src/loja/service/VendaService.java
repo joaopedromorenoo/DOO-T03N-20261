@@ -14,12 +14,9 @@ public class VendaService {
 
     // Retorna valor do desconto se aplicavel
     public static double calculaDesconto(int quantidade,
-                                         double valUni) {
-
-        double valor = calculaPreco(quantidade,valUni);
-
+                                         double valTot) {
         if (quantidade > 10){
-            return valor * 0.05;
+            return valTot * 0.05;
         }
         return 0;
     }
