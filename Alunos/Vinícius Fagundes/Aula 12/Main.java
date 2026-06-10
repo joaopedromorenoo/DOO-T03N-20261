@@ -3,7 +3,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Main {
-
         public static void main(String[] args) {
 
                 // ATIVIDADE 1
@@ -33,9 +32,7 @@ public class Main {
                                 "se", "quarta", "sábado");
 
                 Map<String, Long> contagemPalavras = palavras.stream()
-                                .collect(Collectors.groupingBy(
-                                                Function.identity(),
-                                                Collectors.counting()));
+                                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
                 System.out.println("Contagem de palavras:");
                 contagemPalavras.forEach((palavra, quantidade) -> System.out.println(palavra + " = " + quantidade));
@@ -67,8 +64,7 @@ public class Main {
                 // ATIVIDADE 6
                 System.out.println("\nATIVIDADE 6");
 
-                List<String> linguagens = Arrays.asList(
-                                "Java", "Python", "C", "JavaScript", "Ruby");
+                List<String> linguagens = Arrays.asList("Java", "Python", "C", "JavaScript", "Ruby");
 
                 List<String> ordenadas = linguagens.stream()
                                 .sorted(Comparator.comparingInt(String::length))
@@ -79,7 +75,6 @@ public class Main {
         }
 }
 
-// Classe Produto
 class Produto {
         private String nome;
         private double preco;
