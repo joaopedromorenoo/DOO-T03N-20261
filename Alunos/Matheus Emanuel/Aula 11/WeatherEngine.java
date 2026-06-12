@@ -13,8 +13,6 @@ public class WeatherEngine {
     private static final String NOMINATIM_URL =
         "https://nominatim.openstreetmap.org/search";
 
-    // ── modelos de dados ──────────────────────────────────────────────────────
-
     public static class CityCandidate {
         public final String displayName;
         public final String lat;
@@ -63,8 +61,6 @@ public class WeatherEngine {
         }
     }
 
-    // ── dotenv ────────────────────────────────────────────────────────────────
-
     public static Map<String, String> loadDotEnv() {
         Map<String, String> env = new LinkedHashMap<>();
         Path path = Paths.get(".env");
@@ -97,12 +93,6 @@ public class WeatherEngine {
         return key;
     }
 
-    // ── geocodificação (Nominatim / OpenStreetMap) ────────────────────────────
-
-    /**
-     * Busca até 6 candidatos de cidade pelo nome.
-     * Retorna lista vazia se nenhum resultado for encontrado.
-     */
     public List<CityCandidate> searchCandidates(String query) throws WeatherException {
         try {
             String url = NOMINATIM_URL + "?q="
@@ -113,7 +103,6 @@ public class WeatherEngine {
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(10_000);
             conn.setReadTimeout(10_000);
-            // Nominatim exige User-Agent identificado
             conn.setRequestProperty("User-Agent", "WeatherApp/1.0 (educational project)");
             conn.setRequestProperty("Accept-Language", "pt-BR,pt;q=0.9");
 
@@ -121,8 +110,7 @@ public class WeatherEngine {
                 throw new WeatherException("Falha ao buscar cidades (Nominatim HTTP "
                     + conn.getResponseCode() + ").");
 
-            String json = readStream(conn.getInputStream());
-            return parseCandidates(json);
+            return parseCandidates(readStream(conn.getInputStream()));
 
         } catch (WeatherException e) {
             throw e;
@@ -133,7 +121,6 @@ public class WeatherEngine {
 
     private List<CityCandidate> parseCandidates(String json) {
         List<CityCandidate> list = new ArrayList<>();
-        // cada objeto do array começa com {
         int pos = 0;
         while (true) {
             int start = json.indexOf('{', pos);
@@ -153,9 +140,6 @@ public class WeatherEngine {
         return list;
     }
 
-    // ── busca de clima ────────────────────────────────────────────────────────
-
-    /** Busca pelo nome; não faz geocodificação. Use quando já selecionou o candidato. */
     public WeatherData fetchByCoords(String lat, String lon) throws WeatherException {
         String apiKey = loadApiKey();
         String coords = lat + "," + lon;
@@ -167,7 +151,6 @@ public class WeatherEngine {
         return parse(request(url));
     }
 
-    /** Busca direta por nome (fallback ou busca sem ambiguidade). */
     public WeatherData fetch(String city) throws WeatherException {
         String apiKey = loadApiKey();
         String url = WEATHER_URL
@@ -198,8 +181,6 @@ public class WeatherEngine {
             throw new WeatherException("Falha de conexao: " + e.getMessage(), e);
         }
     }
-
-    // ── parsing JSON ──────────────────────────────────────────────────────────
 
     private WeatherData parse(String json) throws WeatherException {
         try {

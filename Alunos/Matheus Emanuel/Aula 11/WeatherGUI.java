@@ -11,20 +11,18 @@ import java.util.List;
 
 public class WeatherGUI extends JFrame {
 
-    // ── paleta ────────────────────────────────────────────────────────────────
     private static final Color BG_DARK       = new Color(15,  23,  42);
     private static final Color BG_CARD       = new Color(30,  41,  59);
     private static final Color BG_CARD2      = new Color(51,  65,  85);
     private static final Color ACCENT_BLUE   = new Color(56,  189, 248);
-    private static final Color ACCENT_BLUE_H = new Color(14,  165, 233);  // hover
-    private static final Color ACCENT_BLUE_P = new Color(2,   132, 199);  // pressed
+    private static final Color ACCENT_BLUE_H = new Color(14,  165, 233);
+    private static final Color ACCENT_BLUE_P = new Color(2,   132, 199);
     private static final Color ACCENT_GREEN  = new Color(74,  222, 128);
     private static final Color COLOR_RED     = new Color(248, 113, 113);
     private static final Color TEXT_WHITE    = new Color(248, 250, 252);
     private static final Color TEXT_MUTED    = new Color(148, 163, 184);
     private static final Color BORDER_COLOR  = new Color(71,  85,  105);
 
-    // ── cidades pré-definidas ─────────────────────────────────────────────────
     private static final String[] PRESET_CITIES = {
         "[ Selecione ou digite uma cidade ]",
         "Sao Paulo, BR",
@@ -48,7 +46,7 @@ public class WeatherGUI extends JFrame {
         "Tokyo, JP",
         "Buenos Aires, AR",
         "Santiago, CL",
-        "Bogotá, CO",
+        "Bogota, CO",
         "Mexico City, MX",
         "Berlin, DE",
         "Madrid, ES",
@@ -57,14 +55,11 @@ public class WeatherGUI extends JFrame {
         "Dubai, AE",
     };
 
-    // ── engine ────────────────────────────────────────────────────────────────
     private final WeatherEngine engine = new WeatherEngine();
 
-    // ── componentes de busca ──────────────────────────────────────────────────
     private JComboBox<String> cityCombo;
     private FlatButton        searchButton;
 
-    // ── labels de resultado ───────────────────────────────────────────────────
     private JLabel lblCity;
     private JLabel lblCondition;
     private JLabel lblTemp;
@@ -76,7 +71,6 @@ public class WeatherGUI extends JFrame {
     private JLabel lblWindDir;
     private JLabel lblStatus;
 
-    // ─────────────────────────────────────────────────────────────────────────
     public WeatherGUI() {
         setTitle("Clima ao Vivo");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -93,17 +87,16 @@ public class WeatherGUI extends JFrame {
         setVisible(true);
     }
 
-    // ── cabeçalho ─────────────────────────────────────────────────────────────
     private JPanel buildHeader() {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(BG_DARK);
         p.setBorder(new EmptyBorder(26, 32, 10, 32));
 
-        JLabel title = new JLabel("⛅  Consulta de Clima");
+        JLabel title = new JLabel("  Consulta de Clima");
         title.setFont(new Font("Segoe UI Emoji", Font.BOLD, 26));
         title.setForeground(TEXT_WHITE);
 
-        JLabel sub = new JLabel("Visual Crossing Weather API  •  Unidades métricas");
+        JLabel sub = new JLabel("Visual Crossing Weather API  •  Unidades metricas");
         sub.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         sub.setForeground(TEXT_MUTED);
 
@@ -113,26 +106,24 @@ public class WeatherGUI extends JFrame {
         texts.add(sub);
         p.add(texts, BorderLayout.WEST);
 
-        // badge de status do .env
         String keyStatus;
         Color  keyColor;
         try {
             WeatherEngine.loadApiKey();
-            keyStatus = "✔  API Key carregada";
+            keyStatus = "API Key carregada";
             keyColor  = ACCENT_GREEN;
         } catch (WeatherException e) {
-            keyStatus = "⚠  .env não encontrado";
+            keyStatus = ".env nao encontrado";
             keyColor  = COLOR_RED;
         }
         JLabel badge = new JLabel(keyStatus);
-        badge.setFont(new Font("Segoe UI Emoji", Font.BOLD, 11));
+        badge.setFont(new Font("Segoe UI", Font.BOLD, 11));
         badge.setForeground(keyColor);
         p.add(badge, BorderLayout.EAST);
 
         return p;
     }
 
-    // ── área central ──────────────────────────────────────────────────────────
     private JPanel buildCenter() {
         JPanel wrapper = new JPanel(new BorderLayout(0, 14));
         wrapper.setBackground(BG_DARK);
@@ -146,14 +137,12 @@ public class WeatherGUI extends JFrame {
         JPanel card = card(BG_CARD);
         card.setLayout(new BorderLayout(12, 0));
 
-        // ── label ─────────────────────────────────────────────────────────────
-        JLabel lbl = new JLabel("🌍  Cidade:");
-        lbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+        JLabel lbl = new JLabel("Cidade:");
+        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         lbl.setForeground(TEXT_MUTED);
         lbl.setBorder(new EmptyBorder(0, 0, 0, 4));
         card.add(lbl, BorderLayout.WEST);
 
-        // ── combo editável ────────────────────────────────────────────────────
         cityCombo = new JComboBox<>(PRESET_CITIES) {
             @Override public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
@@ -164,7 +153,6 @@ public class WeatherGUI extends JFrame {
         cityCombo.setSelectedIndex(0);
         styleCombo(cityCombo);
 
-        // ao selecionar item válido do menu, dispara busca automaticamente
         cityCombo.addActionListener(e -> {
             if ("comboBoxChanged".equals(e.getActionCommand())) {
                 Object sel = cityCombo.getSelectedItem();
@@ -176,12 +164,10 @@ public class WeatherGUI extends JFrame {
             }
         });
 
-        // Enter no campo de texto busca via editor customizado
         cityCombo.getEditor().addActionListener(e -> doSearch());
 
         card.add(cityCombo, BorderLayout.CENTER);
 
-        // ── botão buscar ──────────────────────────────────────────────────────
         searchButton = new FlatButton("Buscar");
         searchButton.addActionListener(e -> doSearch());
         card.add(searchButton, BorderLayout.EAST);
@@ -193,7 +179,6 @@ public class WeatherGUI extends JFrame {
         JPanel resultCard = card(BG_CARD);
         resultCard.setLayout(new BorderLayout(0, 14));
 
-        // cidade + condição
         JPanel top = new JPanel(new BorderLayout(8, 0));
         top.setOpaque(false);
 
@@ -208,13 +193,11 @@ public class WeatherGUI extends JFrame {
         top.add(lblCity,      BorderLayout.WEST);
         top.add(lblCondition, BorderLayout.EAST);
 
-        // temperatura destaque
         lblTemp = new JLabel("—");
         lblTemp.setFont(new Font("Segoe UI", Font.BOLD, 64));
         lblTemp.setForeground(ACCENT_BLUE);
         lblTemp.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // grade 2×3
         JPanel grid = new JPanel(new GridLayout(2, 3, 12, 12));
         grid.setOpaque(false);
 
@@ -225,18 +208,17 @@ public class WeatherGUI extends JFrame {
         lblWindSpeed = new JLabel("—");
         lblWindDir   = new JLabel("—");
 
-        grid.add(metric(lblTempMax,   "Máxima",        "🌡"));
-        grid.add(metric(lblTempMin,   "Mínima",        "❄"));
-        grid.add(metric(lblHumidity,  "Humidade",           "💧"));
-        grid.add(metric(lblPrecip,    "Precipitação", "🌧"));
-        grid.add(metric(lblWindSpeed, "Vento",              "💨"));
-        grid.add(metric(lblWindDir,   "Direção",  "🧭"));
+        grid.add(metric(lblTempMax,   "Maxima",       "T+"));
+        grid.add(metric(lblTempMin,   "Minima",       "T-"));
+        grid.add(metric(lblHumidity,  "Humidade",     "H"));
+        grid.add(metric(lblPrecip,    "Precipitacao", "P"));
+        grid.add(metric(lblWindSpeed, "Vento",        "V"));
+        grid.add(metric(lblWindDir,   "Direcao",      "D"));
 
         resultCard.add(top,       BorderLayout.NORTH);
         resultCard.add(lblTemp,   BorderLayout.CENTER);
         resultCard.add(grid,      BorderLayout.SOUTH);
 
-        // status
         lblStatus = new JLabel(" ");
         lblStatus.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblStatus.setForeground(TEXT_MUTED);
@@ -249,7 +231,6 @@ public class WeatherGUI extends JFrame {
         return wrap;
     }
 
-    // ── rodapé ────────────────────────────────────────────────────────────────
     private JPanel buildFooter() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p.setBackground(BG_DARK);
@@ -261,7 +242,6 @@ public class WeatherGUI extends JFrame {
         return p;
     }
 
-    // ── lógica de busca ───────────────────────────────────────────────────────
     private void doSearch() {
         Object sel = cityCombo.getSelectedItem();
         String query = sel == null ? "" : sel.toString().trim();
@@ -285,14 +265,12 @@ public class WeatherGUI extends JFrame {
 
                 WeatherEngine.CityCandidate chosen;
                 if (candidates.isEmpty()) {
-                    // Nominatim não encontrou — tenta direto pelo nome
                     return engine.fetch(query);
                 } else if (candidates.size() == 1) {
                     chosen = candidates.get(0);
                 } else {
-                    // mais de um resultado: pede ao usuário para escolher (na EDT)
                     chosen = askUserToChoose(candidates);
-                    if (chosen == null) return null; // cancelou
+                    if (chosen == null) return null;
                 }
 
                 return engine.fetchByCoords(chosen.lat, chosen.lon);
@@ -322,13 +300,11 @@ public class WeatherGUI extends JFrame {
         worker.execute();
     }
 
-    /** Exibe diálogo de seleção de cidade na EDT e aguarda a resposta. */
     private WeatherEngine.CityCandidate askUserToChoose(
             List<WeatherEngine.CityCandidate> candidates) throws Exception {
 
         final WeatherEngine.CityCandidate[] result = {null};
 
-        // cria painel customizado escuro
         JPanel panel = new JPanel(new BorderLayout(0, 10));
         panel.setBackground(BG_CARD);
         panel.setBorder(new EmptyBorder(6, 4, 4, 4));
@@ -338,7 +314,6 @@ public class WeatherGUI extends JFrame {
         msg.setForeground(TEXT_WHITE);
         panel.add(msg, BorderLayout.NORTH);
 
-        // lista de candidatos
         DefaultListModel<WeatherEngine.CityCandidate> model = new DefaultListModel<>();
         candidates.forEach(model::addElement);
         JList<WeatherEngine.CityCandidate> list = new JList<>(model);
@@ -351,7 +326,6 @@ public class WeatherGUI extends JFrame {
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(0);
 
-        // renderer que encurta nomes muito longos visualmente
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> l, Object value,
@@ -372,13 +346,12 @@ public class WeatherGUI extends JFrame {
         scroll.getViewport().setBackground(BG_CARD2);
         panel.add(scroll, BorderLayout.CENTER);
 
-        // executa na EDT e aguarda (invokeAndWait garante sincronismo com o SwingWorker)
         javax.swing.SwingUtilities.invokeAndWait(() -> {
-            UIManager.put("OptionPane.background",          BG_CARD);
-            UIManager.put("Panel.background",               BG_CARD);
-            UIManager.put("OptionPane.messageForeground",   TEXT_WHITE);
-            UIManager.put("Button.background",              BG_CARD2);
-            UIManager.put("Button.foreground",              TEXT_WHITE);
+            UIManager.put("OptionPane.background",        BG_CARD);
+            UIManager.put("Panel.background",             BG_CARD);
+            UIManager.put("OptionPane.messageForeground", TEXT_WHITE);
+            UIManager.put("Button.background",            BG_CARD2);
+            UIManager.put("Button.foreground",            TEXT_WHITE);
 
             int opt = JOptionPane.showConfirmDialog(
                 WeatherGUI.this, panel,
@@ -410,8 +383,6 @@ public class WeatherGUI extends JFrame {
             + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
     }
 
-    // ── helpers de UI ─────────────────────────────────────────────────────────
-
     private JPanel card(Color bg) {
         JPanel p = new JPanel() {
             @Override protected void paintComponent(Graphics g2d) {
@@ -434,7 +405,7 @@ public class WeatherGUI extends JFrame {
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
         JLabel titleLbl = new JLabel(icon + " " + title);
-        titleLbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 11));
+        titleLbl.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         titleLbl.setForeground(TEXT_MUTED);
         titleLbl.setAlignmentX(LEFT_ALIGNMENT);
 
@@ -448,7 +419,6 @@ public class WeatherGUI extends JFrame {
         return p;
     }
 
-    /** Campo de texto que pinta hint em cinza quando vazio e sem foco */
     private class HintTextField extends JTextField {
         private final String hint;
         HintTextField(String hint) {
@@ -477,14 +447,12 @@ public class WeatherGUI extends JFrame {
         }
     }
 
-    /** Editor customizado que usa o HintTextField e ignora o item placeholder */
     private class HintComboEditor implements ComboBoxEditor {
         private final HintTextField field;
         HintComboEditor() { field = new HintTextField("Digite ou selecione uma cidade..."); }
         @Override public Component getEditorComponent() { return field; }
         @Override public void setItem(Object item) {
             String s = item == null ? "" : item.toString();
-            // placeholder e separador não aparecem no campo de texto
             field.setText(s.startsWith("[") || s.startsWith("---") ? "" : s);
         }
         @Override public Object getItem() { return field.getText(); }
@@ -493,14 +461,12 @@ public class WeatherGUI extends JFrame {
         @Override public void removeActionListener(ActionListener l) { field.removeActionListener(l); }
     }
 
-    /** Estiliza o JComboBox com a paleta escura */
     private void styleCombo(JComboBox<String> combo) {
         combo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         combo.setForeground(TEXT_WHITE);
         combo.setBackground(BG_CARD2);
         combo.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
 
-        // setUI ANTES de setEditor — o setUI recria o editor padrão se chamado depois
         combo.setUI(new BasicComboBoxUI() {
             @Override protected JButton createArrowButton() {
                 JButton btn = new JButton() {
@@ -536,10 +502,8 @@ public class WeatherGUI extends JFrame {
             }
         });
 
-        // editor DEPOIS do setUI
         combo.setEditor(new HintComboEditor());
 
-        // renderer da lista dropdown
         combo.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list,
@@ -558,7 +522,6 @@ public class WeatherGUI extends JFrame {
             }
         });
 
-        // força o JList interno do popup a ter fundo escuro
         combo.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent e) {
                 SwingUtilities.invokeLater(() -> {
@@ -587,7 +550,6 @@ public class WeatherGUI extends JFrame {
 
     private String fmt(double v) { return String.format("%.1f", v); }
 
-    // ── botão baseado em JPanel (sem interferência do L&F) ────────────────────
     private class FlatButton extends JPanel {
         private boolean hovered  = false;
         private boolean pressed  = false;
@@ -662,10 +624,7 @@ public class WeatherGUI extends JFrame {
         }
     }
 
-    // ── entry point ───────────────────────────────────────────────────────────
     public static void main(String[] args) {
-        // Metal L&F: cross-platform, respeita setBackground/setForeground em todos os componentes.
-        // O System L&F do Windows usa renderizacao nativa que ignora essas configuracoes.
         try { UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel"); }
         catch (Exception ignored) {}
 
