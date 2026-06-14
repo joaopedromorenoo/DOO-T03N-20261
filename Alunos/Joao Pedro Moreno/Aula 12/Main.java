@@ -31,7 +31,7 @@ public class Main {
             .collect(Collectors.toCollection(ArrayList::new));
             System.out.println("Atv2: " + nomesMaiusculos + "\n");
 
-    //Atv3 - Crie um programa que conte quantas vezes cada palavra única aparece em uma lista de strings. Utilize a Stream API para processar os dados. Lista de palavras("se", "talvez", "hoje" "sábado", "se", "quarta", "sábado")
+    //Atv3 
     ArrayList<String> palavras = new ArrayList<>();
     palavras.add("se");
     palavras.add("talvez");
@@ -46,7 +46,7 @@ public class Main {
             .collect(Collectors.groupingBy(p -> p, Collectors.counting()))
             .forEach((palavra, contagem) -> System.out.println(palavra + ": " + contagem));
 
-    //Atv4 - Crie uma Classe Produto, ela possui os atributos nome e preço. Crie uma lista com 4 objetos do tipo Produto, pode definir os valores diretamente no código("hard coded"). Escreva um programa que filtre os produtos cujo preço seja maior que R$ 100,00 utilizando a Stream API.
+    //Atv4
     ArrayList<Produto> produtos = new ArrayList<>();
     produtos.add(new Produto("Produto A", 50.0));
     produtos.add(new Produto("Produto B", 150.0));
@@ -59,13 +59,13 @@ public class Main {
             System.out.println("\nAtv4: Produtos com preço maior que R$ 100,00:");
             produtosFiltrados.forEach(p -> System.out.println(p.getNome() + " - R$ " + p.getPreco()));
 
-    //Atv5 - Realize a soma do valor total dos Produtos que estão na lista de produtos criados na atv4, realize essa soma utilizando Stream API.
+    //Atv5
     double somaTotal = produtos.stream()
             .mapToDouble(Produto::getPreco)
             .sum();
     System.out.println("\nAtv5: Soma total dos produtos: R$ " + somaTotal);
 
-    //Atv6- Dada a lista("Java", "Python", "C", "JavaScript", "Ruby"), ordene a mesma conforme o tamanho da palavra, da menor para a maior, utilizando a Stream API.
+    //Atv6
     ArrayList<String> linguagens = new ArrayList<>();
     linguagens.add("Java");
     linguagens.add("Python");
